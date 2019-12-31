@@ -102,7 +102,7 @@ export const App = () => {
 
         {text && format && (
           <Grid item xs={12}>
-            <Typography variant={'h2'}>3. Search for matches</Typography>
+            <Typography variant={'h2'}>2. Search for matches</Typography>
 
             <Button
               variant={'contained'}
@@ -119,7 +119,7 @@ export const App = () => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography variant={'h2'}>
-                  4. Review the matched citations
+                  3. Review the matched citations
                 </Typography>
 
                 <Typography variant={'body1'}>
@@ -159,7 +159,7 @@ export const App = () => {
 
         {selectedItems && (
           <Grid item xs={12}>
-            <Typography variant={'h2'}>5. Download</Typography>
+            <Typography variant={'h2'}>4. Download</Typography>
 
             <Grid
               container
