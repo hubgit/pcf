@@ -7,7 +7,6 @@ import Paper from '@material-ui/core/Paper'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
-import he from 'he'
 import * as exporter from './exporter'
 import * as pubmed from './pubmed'
 
@@ -35,55 +34,27 @@ export const Item = React.memo(({ format, text, index, addSelectedItem }) => {
 
     pubmed
       .get({
-        url: '/esearch.fcgi',
         params: {
-          db: 'pubmed',
-          retmode: 'json',
-          retmax: 0,
-          usehistory: 'y',
-          term: citation,
+          query: `src:med ${citation}`,
         },
       })
-      .then(async searchResponse => {
-        if (!searchResponse || searchResponse.status !== 200) {
-          throw new Error()
-        }
-
-        const { esearchresult } = searchResponse.data
-
-        if (!esearchresult) {
-          throw new Error()
-        }
-
-        const { count, webenv, querykey } = esearchresult
-
-        if (Number(count) === 0) {
-          setMatches([])
-          return
-        }
-
-        const response = await pubmed.get({
-          url: '/esummary.fcgi',
-          params: {
-            db: 'pubmed',
-            retmode: 'json',
-            retmax: 3,
-            WebEnv: webenv,
-            query_key: querykey,
-          },
-        })
-
+      .then(async response => {
         if (!response || response.status !== 200) {
           throw new Error()
         }
 
-        const { result } = response.data
+        const { hitCount, resultList } = response.data
 
-        if (!result || !result.uids) {
+        if (hitCount === 0) {
+          setMatches([])
+          return
+        }
+
+        if (!resultList) {
           throw new Error()
         }
 
-        setMatches(result.uids.map(uid => result[uid]))
+        setMatches(resultList.result)
       })
       .catch(error => {
         console.error(error)
@@ -96,7 +67,7 @@ export const Item = React.memo(({ format, text, index, addSelectedItem }) => {
 
   useEffect(() => {
     if (matches && matches.length) {
-      setSelected(matches[0].uid)
+      setSelected(matches[0].pmid)
     } else {
       setSelected(undefined)
     }
@@ -166,13 +137,13 @@ export const Item = React.memo(({ format, text, index, addSelectedItem }) => {
 
                   <List dense>
                     {matches.map(match => {
-                      const isSelected = selected && selected === match.uid
+                      const isSelected = selected && selected === match.pmid
 
                       return (
                         <ListItem
                           alignItems={'flex-start'}
                           button
-                          key={match.uid}
+                          key={match.pmid}
                           style={{
                             background: isSelected ? 'yellow' : 'white',
                             borderWidth: 1,
@@ -182,11 +153,11 @@ export const Item = React.memo(({ format, text, index, addSelectedItem }) => {
                             marginBottom: 8,
                           }}
                           onClick={() =>
-                            setSelected(isSelected ? null : match.uid)
+                            setSelected(isSelected ? null : match.pmid)
                           }
                         >
                           <ListItemText
-                            primary={match.title ? he.decode(match.title) : ''}
+                            primary={match.title ? match.title : ''}
                             secondary={<Metadata item={match} />}
                           />
                         </ListItem>
@@ -232,11 +203,11 @@ export const Item = React.memo(({ format, text, index, addSelectedItem }) => {
 
 const Metadata = React.memo(({ item }) => (
   <div>
-    {item.authors && <div>{pubmed.authors(item.authors)}</div>}
+    {item.authorString && <div>{item.authorString}</div>}
     <div>
-      {item.pubdate && <span>{pubmed.year(item.pubdate)}</span>}
+      {item.pubYear && <span>{item.pubYear}</span>}
       {' · '}
-      {item.fulljournalname && <span>{he.decode(item.fulljournalname)}</span>}
+      {item.journalTitle && <span>{item.journalTitle}</span>}
     </div>
   </div>
 ))
