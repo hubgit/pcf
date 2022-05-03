@@ -1,9 +1,9 @@
-import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import { ThemeProvider } from '@material-ui/styles'
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress'
+import Grid from '@mui/material/Grid'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import { ThemeProvider } from '@mui/material/styles'
 import FileSaver from 'file-saver'
 import React, { useCallback, useEffect, useState } from 'react'
 import * as exporter from './exporter'
@@ -22,7 +22,7 @@ const extensions = {
 export const App = () => {
   const [text, setText] = useState()
   const [items, setItems] = useState()
-  const [format, setFormat] = useState(FORMAT_RIS)
+  const [format] = useState(FORMAT_RIS)
   const [selectedItems, setSelectedItems] = useState()
   const [complete, setComplete] = useState(false)
 
@@ -141,9 +141,8 @@ export const App = () => {
               <Grid item xs={12}>
                 <Grid container spacing={4}>
                   {items.map((item, index) => (
-                    <Grid item xs={12}>
+                    <Grid item xs={12} key={index}>
                       <Item
-                        key={index}
                         text={item}
                         format={format}
                         index={index}

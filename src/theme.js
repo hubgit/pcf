@@ -1,6 +1,6 @@
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
+import { createTheme } from '@mui/material/styles';
 
-export const theme = createMuiTheme({
+export const theme = createTheme({
   typography: {
     fontFamily: 'Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;',
     h2: {
@@ -13,7 +13,7 @@ export const theme = createMuiTheme({
       fontWeight: 'bold',
     },
   },
-  overrides: {
+  components: {
     MuiFormGroup: {
       root: {
         flexDirection: 'row',

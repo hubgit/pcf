@@ -1,11 +1,11 @@
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Paper from '@material-ui/core/Paper'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import List from '@mui/material/List'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemButton from '@mui/material/ListItemButton'
+import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import React, { useEffect, useState } from 'react'
 import he from 'he'
 import * as exporter from './exporter'
@@ -169,9 +169,8 @@ export const Item = React.memo(({ format, text, index, addSelectedItem }) => {
                       const isSelected = selected && selected === match.uid
 
                       return (
-                        <ListItem
+                        <ListItemButton
                           alignItems={'flex-start'}
-                          button
                           key={match.uid}
                           style={{
                             background: isSelected ? 'yellow' : 'white',
@@ -188,8 +187,9 @@ export const Item = React.memo(({ format, text, index, addSelectedItem }) => {
                           <ListItemText
                             primary={match.title ? he.decode(match.title) : ''}
                             secondary={<Metadata item={match} />}
+                            secondaryTypographyProps={{ component: 'div'} }
                           />
-                        </ListItem>
+                        </ListItemButton>
                       )
                     })}
                   </List>
